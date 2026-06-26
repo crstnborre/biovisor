@@ -45,7 +45,7 @@ services:
       - GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR
       - CPL_VSIL_CURL_CACHE_SIZE=200000000
     ports:
-      - "8090:8000"
+      - "8090:80"
     depends_on:
       - minio
 
