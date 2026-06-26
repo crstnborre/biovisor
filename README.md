@@ -27,6 +27,8 @@ Monorepo cliente-servidor. El frontend consume la API de Django. Las capas vecto
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 docker compose up --build
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py createsuperuser
 ```
 
 Servicios disponibles:
