@@ -3,5 +3,6 @@ djangorestframework==3.15.*
 psycopg2-binary==2.9.*
 python-decouple==3.8
 djangorestframework-gis==1.1
+django-cors-headers==4.4.*
 django-storages==1.14.*
 boto3==1.35.*

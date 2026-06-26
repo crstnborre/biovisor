@@ -4,7 +4,7 @@ Portal público de visualización de capas geoespaciales ambientales y zonas de 
 
 ## Stack
 
-- **Frontend:** React + MapLibre GL JS + Vite
+- **Frontend:** React + Vite + MapLibre GL JS + Tailwind CSS v4 + Lucide React + SweetAlert2
 - **Backend:** Django REST Framework
 - **Base de datos:** PostgreSQL + PostGIS
 - **Storage:** MinIO (local) / AWS S3 (producción)
