@@ -1,12 +1,21 @@
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from django.conf import settings
 from .models import Layer, Feature
 
 
 class LayerSerializer(serializers.ModelSerializer):
+    tiles_url = serializers.SerializerMethodField()
+
+    def get_tiles_url(self, obj):
+        if obj.type != Layer.TYPE_GEOTIFF or not obj.file_key:
+            return None
+        s3_url = f"s3://{settings.AWS_STORAGE_BUCKET_NAME}/{obj.file_key}"
+        return f"{settings.TITILER_URL}/cog/tiles/{{z}}/{{x}}/{{y}}?url={s3_url}"
+
     class Meta:
         model = Layer
-        fields = ['id', 'name', 'description', 'type', 'visible', 'order', 'tile_status', 'created_at']
+        fields = ['id', 'name', 'description', 'type', 'visible', 'order', 'tile_status', 'created_at', 'tiles_url']
 
 
 class FeatureSerializer(GeoFeatureModelSerializer):

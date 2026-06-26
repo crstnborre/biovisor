@@ -7,6 +7,12 @@ const TYPE_BADGE = {
   geotiff: { label: 'GeoTIFF', cls: 'bg-amber-900/60 text-amber-300' },
 }
 
+function isInteractive(layer) {
+  if (layer.type === 'geojson') return true
+  if (layer.type === 'geotiff') return layer.tile_status === 'ready' && !!layer.tiles_url
+  return false
+}
+
 export default function LayerPanel({ layers, enabledIds, toggleLayer }) {
   return (
     <aside className="w-72 bg-slate-900 text-white flex flex-col h-full shadow-2xl z-10 flex-shrink-0">
@@ -31,7 +37,7 @@ export default function LayerPanel({ layers, enabledIds, toggleLayer }) {
           const enabled = enabledIds.has(layer.id)
           const color = COLORS[idx % COLORS.length]
           const badge = TYPE_BADGE[layer.type] ?? { label: layer.type, cls: 'bg-slate-700 text-slate-400' }
-          const interactive = layer.type === 'geojson'
+          const interactive = isInteractive(layer)
 
           return (
             <li key={layer.id}>
@@ -41,8 +47,8 @@ export default function LayerPanel({ layers, enabledIds, toggleLayer }) {
                 className={[
                   'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all',
                   interactive ? 'cursor-pointer' : 'cursor-default',
-                  enabled ? 'bg-slate-800' : 'opacity-50 hover:opacity-70',
-                  interactive && !enabled ? 'hover:bg-slate-800/40' : '',
+                  enabled ? 'bg-slate-800' : 'opacity-50',
+                  interactive && !enabled ? 'hover:bg-slate-800/40 hover:opacity-70' : '',
                 ].join(' ')}
               >
                 <span

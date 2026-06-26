@@ -29,9 +29,25 @@ export default function Map({ layers, enabledIds }) {
     const map = mapRef.current
 
     layers.forEach((layer, idx) => {
-      if (layer.type !== 'geojson') return
       const color = COLORS[idx % COLORS.length]
       const srcId = `src-${layer.id}`
+      const vis = enabledIds.has(layer.id) ? 'visible' : 'none'
+
+      if (layer.type === 'geotiff' && layer.tiles_url) {
+        if (!map.getSource(srcId)) {
+          map.addSource(srcId, { type: 'raster', tiles: [layer.tiles_url], tileSize: 256 })
+          map.addLayer({
+            id: `raster-${layer.id}`, type: 'raster', source: srcId,
+            paint: { 'raster-opacity': 0.8 },
+          })
+        }
+        if (map.getLayer(`raster-${layer.id}`)) {
+          map.setLayoutProperty(`raster-${layer.id}`, 'visibility', vis)
+        }
+        return
+      }
+
+      if (layer.type !== 'geojson') return
 
       if (!map.getSource(srcId)) {
         map.addSource(srcId, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
@@ -62,7 +78,6 @@ export default function Map({ layers, enabledIds }) {
           .then(data => map.getSource(srcId)?.setData(data))
       }
 
-      const vis = enabledIds.has(layer.id) ? 'visible' : 'none'
       ;[`fill-${layer.id}`, `line-${layer.id}`, `circle-${layer.id}`].forEach(lid => {
         if (map.getLayer(lid)) map.setLayoutProperty(lid, 'visibility', vis)
       })

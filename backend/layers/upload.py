@@ -56,7 +56,7 @@ def handle_geotiff(file, name, description):
         name=name,
         description=description,
         type=Layer.TYPE_GEOTIFF,
-        tile_status=Layer.STATUS_PENDING,
+        tile_status=Layer.STATUS_READY,
     )
 
     try:
