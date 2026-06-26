@@ -27,3 +27,8 @@ def upload_file(file_obj, key):
     bucket = config('AWS_STORAGE_BUCKET_NAME')
     client.upload_fileobj(file_obj, bucket, key)
     return key
+
+
+def delete_file(key):
+    client = get_client()
+    client.delete_object(Bucket=config('AWS_STORAGE_BUCKET_NAME'), Key=key)

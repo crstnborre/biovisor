@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 ]
 
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=Csv(), default='http://localhost:5173')
+CORS_ALLOW_CREDENTIALS = True
 
 TITILER_URL = config('TITILER_URL', default='http://localhost:8080')
 
