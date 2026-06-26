@@ -46,8 +46,21 @@ Servicios disponibles:
 |---|---|---|
 | GET | `/api/layers/` | Lista de capas visibles |
 | GET | `/api/layers/{id}/features/` | Features GeoJSON de una capa |
+| POST | `/api/admin/layers/upload/` | Subir capa (requiere autenticación) |
 
 El admin de Django está en `/admin/`.
+
+### Subir una capa
+
+```bash
+curl -X POST http://localhost:8000/api/admin/layers/upload/ \
+  -u usuario:password \
+  -F "name=Nombre de la capa" \
+  -F "description=Descripción opcional" \
+  -F "file=@archivo.geojson"
+```
+
+Formatos soportados: `.geojson`, `.json`, `.tif`, `.tiff`.
 
 ## Variables de entorno
 

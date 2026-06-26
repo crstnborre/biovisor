@@ -14,3 +14,10 @@ class FeatureSerializer(GeoFeatureModelSerializer):
         model = Feature
         geo_field = 'geometry'
         fields = ['id', 'properties']
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        nested = ret.get('properties', {}).get('properties')
+        if nested is not None:
+            ret['properties'] = nested
+        return ret
