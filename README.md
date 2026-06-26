@@ -38,6 +38,15 @@ Servicios disponibles:
 | MinIO console | http://localhost:9001 |
 | PostgreSQL | localhost:5433 |
 
+## API
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | `/api/layers/` | Lista de capas visibles |
+| GET | `/api/layers/{id}/features/` | Features GeoJSON de una capa |
+
+El admin de Django está en `/admin/`.
+
 ## Variables de entorno
 
 Ver `backend/.env.example` y `frontend/.env.example`.
