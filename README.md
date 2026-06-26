@@ -1,20 +1,49 @@
 # biovisor
 
-> 🚧 In development
+Portal público de visualización de capas geoespaciales ambientales y zonas de riesgo natural en Colombia.
 
-Public geospatial portal for visualizing environmental layers and natural risk zones in Colombia. Supports GeoJSON and GeoTIFF uploads with an admin panel for layer management.
+## Stack
 
-## Tech Stack
+- **Frontend:** React + MapLibre GL JS + Vite
+- **Backend:** Django REST Framework
+- **Base de datos:** PostgreSQL + PostGIS
+- **Storage:** MinIO (local) / AWS S3 (producción)
+- **Infraestructura:** Docker
 
-- React + MapLibre GL JS
-- Django REST Framework
-- PostgreSQL + PostGIS
-- Docker
+## Arquitectura
 
-## Status
+Monorepo cliente-servidor. El frontend consume la API de Django. Las capas vectoriales se almacenan en PostGIS y se sirven como GeoJSON. Las capas raster (GeoTIFF) se procesan al subir y se almacenan como tiles XYZ estáticos en object storage.
 
-Active development. Setup instructions coming once the base is ready.
+## Formatos soportados
 
-## License
+| Formato | Flujo |
+|---|---|
+| GeoJSON | Subida → PostGIS → MapLibre |
+| GeoTIFF | Subida → tiles XYZ (async) → MapLibre raster layer |
+
+## Configuración local
+
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+docker compose up --build
+```
+
+Servicios disponibles:
+
+| Servicio | URL |
+|---|---|
+| Frontend | http://localhost:5173 |
+| Backend API | http://localhost:8000 |
+| MinIO console | http://localhost:9001 |
+| PostgreSQL | localhost:5433 |
+
+## Variables de entorno
+
+Ver `backend/.env.example` y `frontend/.env.example`.
+
+Para producción, apuntar `AWS_S3_ENDPOINT_URL` a S3 y configurar las credenciales de AWS correspondientes.
+
+## Licencia
 
 MIT
