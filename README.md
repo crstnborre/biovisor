@@ -37,7 +37,7 @@ Servicios disponibles:
 |---|---|
 | Frontend | http://localhost:5173 |
 | Backend API | http://localhost:8000 |
-| TiTiler | http://localhost:8080 |
+| TiTiler | http://localhost:8090 |
 | MinIO console | http://localhost:9001 |
 | PostgreSQL | localhost:5433 |
 
