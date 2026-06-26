@@ -7,3 +7,49 @@ body,
   margin: 0;
   overflow: hidden;
 }
+
+.bv-popup .maplibregl-popup-content {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+.bv-popup .maplibregl-popup-tip {
+  border-top-color: #1e293b;
+}
+.bv-popup .maplibregl-popup-close-button {
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 8px;
+  background: none;
+}
+.bv-popup .maplibregl-popup-close-button:hover {
+  color: #e2e8f0;
+  background: none;
+}
+.bv-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.bv-row {
+  display: flex;
+  gap: 8px;
+  padding: 2px 0;
+  border-bottom: 1px solid #1e3a5f20;
+}
+.bv-key {
+  color: #64748b;
+  font-size: 11px;
+  min-width: 80px;
+  font-family: monospace;
+}
+.bv-val {
+  color: #e2e8f0;
+  font-size: 11px;
+  word-break: break-word;
+}

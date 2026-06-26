@@ -1,4 +1,4 @@
-import { Layers, Eye, EyeOff, Globe } from 'lucide-react'
+import { Layers, Eye, EyeOff, Globe, LayoutDashboard, Crosshair } from 'lucide-react'
 
 const COLORS = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4']
 
@@ -13,7 +13,7 @@ function isInteractive(layer) {
   return false
 }
 
-export default function LayerPanel({ layers, enabledIds, toggleLayer }) {
+export default function LayerPanel({ layers, enabledIds, toggleLayer, onZoomToLayer, isAdmin = false }) {
   return (
     <aside className="w-72 bg-slate-900 text-white flex flex-col h-full shadow-2xl z-10 flex-shrink-0">
       <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-700/60">
@@ -40,42 +40,63 @@ export default function LayerPanel({ layers, enabledIds, toggleLayer }) {
           const interactive = isInteractive(layer)
 
           return (
-            <li key={layer.id}>
-              <button
-                onClick={() => interactive && toggleLayer(layer.id)}
-                disabled={!interactive}
-                className={[
-                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all',
-                  interactive ? 'cursor-pointer' : 'cursor-default',
-                  enabled ? 'bg-slate-800' : 'opacity-50',
-                  interactive && !enabled ? 'hover:bg-slate-800/40 hover:opacity-70' : '',
-                ].join(' ')}
-              >
-                <span
-                  className="w-2.5 h-2.5 rounded-full flex-shrink-0 ring-1 ring-white/20"
-                  style={{ backgroundColor: enabled ? color : '#4b5563' }}
-                />
-                <span className="flex-1 text-sm text-slate-200 truncate leading-none">
-                  {layer.name}
-                </span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium flex-shrink-0 ${badge.cls}`}>
-                  {badge.label}
-                </span>
-                {interactive ? (
-                  enabled
-                    ? <Eye size={13} className="text-slate-300 flex-shrink-0" />
-                    : <EyeOff size={13} className="text-slate-600 flex-shrink-0" />
-                ) : (
-                  <span className="text-[10px] text-slate-600 flex-shrink-0">pronto</span>
+            <li key={layer.id} className="group/item">
+              <div className={[
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all',
+                enabled ? 'bg-slate-800' : 'opacity-50',
+              ].join(' ')}>
+                <button
+                  onClick={() => interactive && toggleLayer(layer.id)}
+                  disabled={!interactive}
+                  className={[
+                    'flex items-center gap-3 flex-1 min-w-0 text-left',
+                    interactive ? 'cursor-pointer' : 'cursor-default',
+                  ].join(' ')}
+                >
+                  <span
+                    className="w-2.5 h-2.5 rounded-full flex-shrink-0 ring-1 ring-white/20"
+                    style={{ backgroundColor: enabled ? color : '#4b5563' }}
+                  />
+                  <span className="flex-1 text-sm text-slate-200 truncate leading-none">
+                    {layer.name}
+                  </span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium flex-shrink-0 ${badge.cls}`}>
+                    {badge.label}
+                  </span>
+                  {interactive ? (
+                    enabled
+                      ? <Eye size={13} className="text-slate-300 flex-shrink-0" />
+                      : <EyeOff size={13} className="text-slate-600 flex-shrink-0" />
+                  ) : (
+                    <span className="text-[10px] text-slate-600 flex-shrink-0">pronto</span>
+                  )}
+                </button>
+                {enabled && (
+                  <button
+                    onClick={e => { e.stopPropagation(); onZoomToLayer?.(layer) }}
+                    className="opacity-0 group-hover/item:opacity-100 text-slate-600 hover:text-emerald-400 transition-all flex-shrink-0"
+                    title="Zoom a capa"
+                  >
+                    <Crosshair size={13} />
+                  </button>
                 )}
-              </button>
+              </div>
             </li>
           )
         })}
       </ul>
 
-      <div className="px-5 py-3 border-t border-slate-700/60 text-[10px] text-slate-600 text-center">
-        capas ambientales y zonas de riesgo
+      <div className="px-5 py-3 border-t border-slate-700/60 flex items-center justify-between">
+        <span className="text-[10px] text-slate-600">capas ambientales y zonas de riesgo</span>
+        {isAdmin && (
+          <a
+            href="/admin"
+            className="flex items-center gap-1 text-[10px] text-slate-500 hover:text-emerald-400 transition-colors"
+          >
+            <LayoutDashboard size={11} />
+            Panel admin
+          </a>
+        )}
       </div>
     </aside>
   )

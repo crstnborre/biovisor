@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Globe, LogOut } from 'lucide-react'
+import { Globe, LogOut, Map } from 'lucide-react'
 import Swal from 'sweetalert2'
 import LoginPage from './LoginPage'
 import UploadForm from '../components/admin/UploadForm'
@@ -28,9 +28,11 @@ export default function AdminPage() {
   }, [user, fetchLayers])
 
   const handleLogout = async () => {
-    await apiFetch('/api/auth/logout/', { method: 'POST' })
-    setUser(null)
-    setLayers([])
+    const r = await apiFetch('/api/auth/logout/', { method: 'POST' })
+    if (r.ok) {
+      setUser(null)
+      setLayers([])
+    }
   }
 
   const handleToggle = async id => {
@@ -38,6 +40,41 @@ export default function AdminPage() {
     if (r.ok) {
       const updated = await r.json()
       setLayers(prev => prev.map(l => l.id === id ? updated : l))
+    } else {
+      const body = await r.json().catch(() => ({}))
+      Swal.fire({ icon: 'error', title: `Error ${r.status}`, text: body.detail || body.error || 'No se pudo actualizar la capa' })
+    }
+  }
+
+  const handleEdit = async layer => {
+    const { value } = await Swal.fire({
+      title: 'Editar capa',
+      html: `
+        <input id="sw-name" class="swal2-input" placeholder="Nombre" value="${layer.name}">
+        <input id="sw-desc" class="swal2-input" placeholder="Descripción (opcional)" value="${layer.description || ''}">
+      `,
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#475569',
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      focusConfirm: false,
+      preConfirm: () => {
+        const name = document.getElementById('sw-name').value.trim()
+        if (!name) { Swal.showValidationMessage('El nombre es requerido'); return false }
+        return { name, description: document.getElementById('sw-desc').value.trim() }
+      },
+    })
+    if (!value) return
+    const r = await apiFetch(`/api/admin/layers/${layer.id}/`, {
+      method: 'PATCH',
+      body: JSON.stringify(value),
+    })
+    if (r.ok) {
+      const updated = await r.json()
+      setLayers(prev => prev.map(l => l.id === layer.id ? updated : l))
+    } else {
+      Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo guardar' })
     }
   }
 
@@ -79,6 +116,13 @@ export default function AdminPage() {
         <span className="text-slate-400 text-sm">Panel admin</span>
         <div className="ml-auto flex items-center gap-4">
           <span className="text-slate-600 text-xs">{user}</span>
+          <a
+            href="/"
+            className="flex items-center gap-1.5 text-slate-500 hover:text-slate-300 text-xs transition-colors"
+          >
+            <Map size={13} />
+            Ver mapa
+          </a>
           <button
             onClick={handleLogout}
             className="flex items-center gap-1.5 text-slate-500 hover:text-white text-xs transition-colors"
@@ -91,7 +135,7 @@ export default function AdminPage() {
 
       <main className="flex-1 p-6 grid grid-cols-[360px_1fr] gap-6 items-start">
         <UploadForm onSuccess={fetchLayers} />
-        <LayerTable layers={layers} onToggle={handleToggle} onDelete={handleDelete} />
+        <LayerTable layers={layers} onToggle={handleToggle} onEdit={handleEdit} onDelete={handleDelete} />
       </main>
     </div>
   )

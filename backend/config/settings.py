@@ -25,8 +25,10 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=Csv(), default='http://localhost:5173')
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', cast=Csv(), default='http://localhost:5173')
 
 TITILER_URL = config('TITILER_URL', default='http://localhost:8080')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='biovisor')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -1,0 +1,68 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "nombre": "Bogotá D.C.", "tipo": "capital", "poblacion": 7743955 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-74.224, 4.459], [-73.990, 4.459], [-73.990, 4.836],
+          [-74.224, 4.836], [-74.224, 4.459]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "nombre": "Medellín", "tipo": "ciudad", "poblacion": 2533424 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-75.680, 6.150], [-75.520, 6.150], [-75.520, 6.320],
+          [-75.680, 6.320], [-75.680, 6.150]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "nombre": "Cali", "tipo": "ciudad", "poblacion": 2227642 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-76.600, 3.310], [-76.430, 3.310], [-76.430, 3.510],
+          [-76.600, 3.510], [-76.600, 3.310]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "nombre": "Parque Nat. Serranía de la Macarena", "tipo": "parque_natural", "area_ha": 629280 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-74.190, 2.050], [-73.700, 2.050], [-73.700, 3.400],
+          [-74.190, 3.400], [-74.190, 2.050]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "nombre": "Volcán Nevado del Ruiz", "tipo": "riesgo_volcanico", "nivel_alerta": "amarillo" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-75.3705, 4.8913]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "nombre": "Río Magdalena", "tipo": "rio_principal", "longitud_km": 1528 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-74.854, 1.957], [-74.800, 3.500], [-74.730, 5.200],
+          [-74.650, 7.000], [-74.500, 9.000], [-74.856, 10.990]
+        ]
+      }
+    }
+  ]
+}

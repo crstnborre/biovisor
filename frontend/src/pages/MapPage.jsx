@@ -1,13 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Swal from 'sweetalert2'
 import Map from '../components/Map'
 import LayerPanel from '../components/LayerPanel'
+import { apiFetch } from '../utils/api'
 
 const API_URL = import.meta.env.VITE_API_URL
 
 export default function MapPage() {
   const [layers, setLayers] = useState([])
   const [enabledIds, setEnabledIds] = useState(new Set())
+  const [isAdmin, setIsAdmin] = useState(false)
+  const mapRef = useRef(null)
+
+  useEffect(() => {
+    apiFetch('/api/auth/user/')
+      .then(r => r.json())
+      .then(data => setIsAdmin(!!data.username))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     fetch(`${API_URL}/api/layers/`)
@@ -39,8 +49,14 @@ export default function MapPage() {
 
   return (
     <div className="flex h-full">
-      <LayerPanel layers={layers} enabledIds={enabledIds} toggleLayer={toggleLayer} />
-      <Map layers={layers} enabledIds={enabledIds} />
+      <LayerPanel
+        layers={layers}
+        enabledIds={enabledIds}
+        toggleLayer={toggleLayer}
+        isAdmin={isAdmin}
+        onZoomToLayer={layer => mapRef.current?.zoomToLayer(layer)}
+      />
+      <Map ref={mapRef} layers={layers} enabledIds={enabledIds} />
     </div>
   )
 }

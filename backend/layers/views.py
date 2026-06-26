@@ -34,7 +34,8 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    authentication_classes = []
+    permission_classes = []
 
     def post(self, request):
         logout(request)
@@ -67,8 +68,18 @@ class LayerDetailView(APIView):
 
     def patch(self, request, pk):
         layer = get_object_or_404(Layer, pk=pk)
-        layer.visible = not layer.visible
-        layer.save(update_fields=['visible'])
+        update_fields = []
+        if 'name' in request.data or 'description' in request.data:
+            if 'name' in request.data:
+                layer.name = request.data['name'].strip()
+                update_fields.append('name')
+            if 'description' in request.data:
+                layer.description = request.data['description'].strip()
+                update_fields.append('description')
+        else:
+            layer.visible = not layer.visible
+            update_fields = ['visible']
+        layer.save(update_fields=update_fields)
         return Response(LayerSerializer(layer).data)
 
     def delete(self, request, pk):
