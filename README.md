@@ -87,7 +87,9 @@ Requiere autenticación. Desde aquí se administran todas las capas:
 | Formato | Extensiones | Límite | Flujo |
 |---|---|---|---|
 | GeoJSON | `.geojson`, `.json` | 50 MB | Upload → PostGIS → MapLibre (vectorial) |
-| GeoTIFF | `.tif`, `.tiff` | 500 MB | Upload → MinIO → TiTiler → MapLibre (raster) |
+| GeoTIFF | `.tif`, `.tiff` | sin límite práctico | Upload → Django (disco temporal) → MinIO multipart → TiTiler → MapLibre (raster) |
+
+El frontend muestra progreso de subida en tiempo real. Al llegar al 100% el archivo ya está en Django; "Procesando..." indica que Django está enviando a MinIO.
 
 Los GeoTIFF pueden estar en cualquier CRS. TiTiler los reprojecta a Web Mercator automáticamente.
 

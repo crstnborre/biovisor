@@ -27,7 +27,7 @@ export default function MapPage() {
       })
       .then(data => {
         setLayers(data)
-        setEnabledIds(new Set(data.filter(l => l.visible).map(l => l.id)))
+        setEnabledIds(new Set())
       })
       .catch(() => {
         Swal.fire({

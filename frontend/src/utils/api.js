@@ -18,11 +18,23 @@ export function apiFetch(path, options = {}) {
   })
 }
 
-export function apiUpload(path, formData) {
-  return fetch(`${API_URL}${path}`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'X-CSRFToken': getCsrf() },
-    body: formData,
+export function apiUpload(path, formData, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', `${API_URL}${path}`)
+    xhr.withCredentials = true
+    xhr.setRequestHeader('X-CSRFToken', getCsrf())
+    if (onProgress) {
+      xhr.upload.onprogress = e => {
+        if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100))
+      }
+    }
+    xhr.onload = () => resolve({
+      ok: xhr.status >= 200 && xhr.status < 300,
+      status: xhr.status,
+      json: () => Promise.resolve(JSON.parse(xhr.responseText)),
+    })
+    xhr.onerror = () => reject(new Error('Error de red'))
+    xhr.send(formData)
   })
 }

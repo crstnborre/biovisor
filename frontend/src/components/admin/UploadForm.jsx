@@ -6,7 +6,7 @@ import { apiUpload } from '../../utils/api'
 export default function UploadForm({ onSuccess }) {
   const [form, setForm] = useState({ name: '', description: '' })
   const [loading, setLoading] = useState(false)
-  const [fileRef, setFileRef] = useState(null)
+  const [progress, setProgress] = useState(null)
 
   const submit = async e => {
     e.preventDefault()
@@ -15,13 +15,15 @@ export default function UploadForm({ onSuccess }) {
     if (!file) return
 
     setLoading(true)
+    setProgress(null)
+
     const fd = new FormData()
     fd.append('name', form.name)
     fd.append('description', form.description)
     fd.append('file', file)
 
     try {
-      const r = await apiUpload('/api/admin/layers/upload/', fd)
+      const r = await apiUpload('/api/admin/layers/upload/', fd, setProgress)
       if (r.ok) {
         Swal.fire({ icon: 'success', title: 'Capa subida', timer: 1800, showConfirmButton: false })
         setForm({ name: '', description: '' })
@@ -35,7 +37,15 @@ export default function UploadForm({ onSuccess }) {
       Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo conectar con el servidor' })
     } finally {
       setLoading(false)
+      setProgress(null)
     }
+  }
+
+  const buttonLabel = () => {
+    if (!loading) return 'Subir capa'
+    if (progress !== null && progress < 100) return `Subiendo ${progress}%`
+    if (progress === 100) return 'Procesando...'
+    return 'Subiendo...'
   }
 
   return (
@@ -81,7 +91,7 @@ export default function UploadForm({ onSuccess }) {
           disabled={loading}
           className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-medium rounded-lg py-2 text-sm transition-colors"
         >
-          {loading ? 'Subiendo...' : 'Subir capa'}
+          {buttonLabel()}
         </button>
       </form>
     </div>

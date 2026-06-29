@@ -4,7 +4,6 @@ from .models import Layer, Feature
 from .storage import upload_file
 
 MAX_GEOJSON_MB = 50
-MAX_GEOTIFF_MB = 500
 
 
 def handle_geojson(file, name, description):
@@ -49,9 +48,6 @@ def handle_geojson(file, name, description):
 
 
 def handle_geotiff(file, name, description):
-    if file.size > MAX_GEOTIFF_MB * 1024 * 1024:
-        raise ValueError(f'El archivo supera el límite de {MAX_GEOTIFF_MB}MB')
-
     layer = Layer.objects.create(
         name=name,
         description=description,
